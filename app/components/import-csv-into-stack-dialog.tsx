@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Upload } from "lucide-react"
 import type { Card } from "../types"
+import { generateCardId } from "../lib/card-utils"
 
 interface ImportCSVIntoStackDialogProps {
   open: boolean
@@ -170,6 +171,8 @@ export default function ImportCSVIntoStackDialog({ open, onOpenChange, onImportC
             id: `preview-${index}`,
             front: frontText,
             back: backText,
+            cardType: 1,
+            interval: 0,
           })
         }
       })
@@ -199,9 +202,11 @@ export default function ImportCSVIntoStackDialog({ open, onOpenChange, onImportC
 
       if (frontText && backText) {
         cards.push({
-          id: `${Date.now()}-${index}-${Math.random()}`,
+          id: generateCardId(),
           front: frontText,
           back: backText,
+          cardType: 1,
+          interval: 0,
         })
       }
     })
@@ -310,12 +315,12 @@ export default function ImportCSVIntoStackDialog({ open, onOpenChange, onImportC
 
                 {/* CSV Table View */}
                 <div className="border rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 p-3 border-b">
+                  <div className="bg-muted p-3 border-b">
                     <h3 className="font-semibold">Your Data Preview</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
-                      <thead className="bg-gray-100">
+                      <thead className="bg-muted">
                         <tr>
                           {columns.map((column) => (
                             <th key={column.index} className="p-3 text-left border-r last:border-r-0 min-w-32">
@@ -369,7 +374,7 @@ export default function ImportCSVIntoStackDialog({ open, onOpenChange, onImportC
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="font-semibold">Front of Card:</Label>
-                    <div className="border rounded p-3 min-h-16 bg-blue-50">
+                    <div className="border rounded p-3 min-h-16 bg-muted/50">
                       {frontColumns.length === 0 ? (
                         <span className="text-muted-foreground text-sm">Select columns above</span>
                       ) : (
@@ -383,7 +388,7 @@ export default function ImportCSVIntoStackDialog({ open, onOpenChange, onImportC
                   </div>
                   <div className="space-y-2">
                     <Label className="font-semibold">Back of Card:</Label>
-                    <div className="border rounded p-3 min-h-16 bg-green-50">
+                    <div className="border rounded p-3 min-h-16 bg-muted/50">
                       {backColumns.length === 0 ? (
                         <span className="text-muted-foreground text-sm">Select columns above</span>
                       ) : (
@@ -425,7 +430,7 @@ export default function ImportCSVIntoStackDialog({ open, onOpenChange, onImportC
             </>
           )}
 
-          {error && <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</div>}
+          {error && <div className="text-sm text-destructive bg-destructive/10 p-2 rounded">{error}</div>}
         </div>
 
         <div className="flex justify-between pt-4 border-t">

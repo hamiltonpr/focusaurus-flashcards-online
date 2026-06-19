@@ -13,6 +13,15 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
+  			brand: {
+  				black: 'hsl(var(--brand-black) / <alpha-value>)',
+  				navy: 'hsl(var(--brand-navy) / <alpha-value>)',
+  				'teal-dark': 'hsl(var(--brand-teal-dark) / <alpha-value>)',
+  				lime: 'hsl(var(--brand-lime) / <alpha-value>)',
+  				gold: 'hsl(var(--brand-gold) / <alpha-value>)',
+  				teal: 'hsl(var(--brand-teal) / <alpha-value>)',
+  				cream: 'hsl(var(--brand-cream) / <alpha-value>)',
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

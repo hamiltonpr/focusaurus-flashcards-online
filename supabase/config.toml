@@ -1,0 +1,4 @@
+project_id = "goacefzxrwwzxfwkioit"
+
+[functions.nhk-easy]
+verify_jwt = false

@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Upload } from "lucide-react"
 import type { Stack, Card } from "../types"
+import { generateCardId } from "../lib/card-utils"
 
 interface ImportCSVDialogProps {
   open: boolean
@@ -135,6 +136,8 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
             id: `preview-${index}`,
             front: frontText,
             back: backText,
+            cardType: 1,
+            interval: 0,
           })
         }
       })
@@ -163,9 +166,11 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
 
       if (frontText && backText) {
         cards.push({
-          id: `${Date.now()}-${index}-${Math.random()}`,
+          id: generateCardId(),
           front: frontText,
           back: backText,
+          cardType: 1,
+          interval: 0,
         })
       }
     })
@@ -260,6 +265,7 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
         name: stackName.trim(),
         cards,
         todayStats: { wordsStudied: 0, timeSpent: 0, accuracy: 0 },
+        allTimeStats: { wordsStudied: 0, timeSpent: 0, sessionsCount: 0 },
       }
 
       onImportStack(newStack)
@@ -336,12 +342,12 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
           {step === "configure" && (
             <>
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <div className="text-sm text-muted-foreground">
                     Detected {columns.length} columns using "{separator === "\t" ? "tab" : separator}" separator
                   </div>
                   <Select value={hasHeaders.toString()} onValueChange={(value) => setHasHeaders(value === "true")}>
-                    <SelectTrigger className="w-48">
+                    <SelectTrigger className="w-full sm:w-48">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -353,12 +359,12 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
 
                 {/* CSV Table View */}
                 <div className="border rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 p-3 border-b">
+                  <div className="bg-muted p-3 border-b">
                     <h3 className="font-semibold">Your Data Preview</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
-                      <thead className="bg-gray-100">
+                      <thead className="bg-muted">
                         <tr>
                           {columns.map((column) => (
                             <th key={column.index} className="p-3 text-left border-r last:border-r-0 min-w-32">
@@ -412,7 +418,7 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="font-semibold">Front of Card:</Label>
-                    <div className="border rounded p-3 min-h-16 bg-blue-50">
+                    <div className="border rounded p-3 min-h-16 bg-muted/50">
                       {frontColumns.length === 0 ? (
                         <span className="text-muted-foreground text-sm">Select columns above</span>
                       ) : (
@@ -426,7 +432,7 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
                   </div>
                   <div className="space-y-2">
                     <Label className="font-semibold">Back of Card:</Label>
-                    <div className="border rounded p-3 min-h-16 bg-green-50">
+                    <div className="border rounded p-3 min-h-16 bg-muted/50">
                       {backColumns.length === 0 ? (
                         <span className="text-muted-foreground text-sm">Select columns above</span>
                       ) : (
@@ -468,24 +474,28 @@ export default function ImportCSVDialog({ open, onOpenChange, onImportStack }: I
             </>
           )}
 
-          {error && <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</div>}
+          {error && <div className="text-sm text-destructive bg-destructive/10 p-2 rounded">{error}</div>}
         </div>
 
-        <div className="flex justify-between pt-4 border-t">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 pt-4 border-t">
           <div>
             {step === "configure" && (
-              <Button variant="outline" onClick={handleBack}>
+              <Button variant="outline" onClick={handleBack} className="w-full sm:w-auto">
                 Back
               </Button>
             )}
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <div className="flex flex-col-reverse sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
             {step === "configure" && (
-              <Button onClick={handleImport} disabled={frontColumns.length === 0 || backColumns.length === 0}>
-                <Upload className="w-4 h-4 mr-2" />
+              <Button
+                onClick={handleImport}
+                disabled={frontColumns.length === 0 || backColumns.length === 0}
+                className="w-full sm:w-auto"
+              >
+                <Upload className="w-4 h-4 mr-2 shrink-0" />
                 Import {parseCSVWithConfig(csvContent).length} Cards
               </Button>
             )}

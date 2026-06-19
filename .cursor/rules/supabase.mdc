@@ -1,0 +1,31 @@
+---
+description: Run and manage Supabase autonomously (migrations, functions, config)
+alwaysApply: true
+---
+
+# Supabase
+
+Handle Supabase work yourself — do not ask the user to run SQL in the dashboard or deploy functions manually.
+
+## CLI
+
+- Run from repo root: `npx supabase <command>`
+- Project ref: `goacefzxrwwzxfwkioit` (from `mobile/.env`)
+- Auth: use `SUPABASE_ACCESS_TOKEN` if set; otherwise run `npx supabase login` (needs user approval once) or link with `npx supabase link --project-ref goacefzxrwwzxfwkioit`
+
+## Migrations
+
+- SQL lives in `supabase/migrations/`
+- After adding or changing migrations, apply them: `npx supabase db push`
+- Do not tell the user to paste migration SQL unless CLI auth is blocked and you cannot proceed
+
+## Edge functions
+
+- Source: `supabase/functions/`
+- Deploy: `npx supabase functions deploy <name> --project-ref goacefzxrwwzxfwkioit`
+
+## App integration
+
+- Public keys: `mobile/.env` (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`)
+- Client: `mobile/src/lib/supabase.ts`
+- User data table + RLS: `supabase/migrations/001_user_data.sql`
